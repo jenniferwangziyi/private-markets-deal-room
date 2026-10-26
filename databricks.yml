@@ -1,0 +1,81 @@
+bundle:
+  name: harbourline
+
+variables:
+  catalog: {default: harbourline}
+  prefix: {default: ""}
+  warehouse_id: {default: d451ee34130421c9}
+  app_sp: {default: b55e85ff-6c35-4f89-812a-80106438c2b6, description: "service principal of the harbourline-dealroom app (starts the ingest + reset jobs)"}
+
+workspace:
+  host: https://adb-3311028655009738.18.azuredatabricks.net
+
+sync:
+  include: ["build/sql/*.sql"]     # rendered SQL (git-ignored) must still reach the workspace
+  exclude: ["tests/**", "docs/**", "architecture/**", "evidence/**", "deck/**"]
+
+artifacts:
+  harbourline_wheel:
+    type: whl
+    path: .
+    build: uv build --wheel
+
+resources:
+  jobs:
+    hl_dealroom_ingest:
+      name: hl-dealroom-ingest
+      permissions:
+        - {service_principal_name: "${var.app_sp}", level: CAN_MANAGE_RUN}
+      tasks:
+        - task_key: ingest
+          spark_python_task:
+            python_file: jobs/dealroom_ingest.py
+            parameters: ["${var.catalog}", "${var.prefix}"]
+          environment_key: default
+        - task_key: ai_extract
+          depends_on: [{task_key: ingest}]
+          sql_task:
+            warehouse_id: ${var.warehouse_id}
+            file: {path: build/sql/35_ai_extract.sql}
+      environments:
+        - environment_key: default
+          spec: {environment_version: "4", dependencies: ["./dist/*.whl", "pyyaml"]}
+
+    hl_external_factors:
+      name: hl-external-factors
+      schedule: {quartz_cron_expression: "0 0 7 * * ?", timezone_id: Asia/Hong_Kong, pause_status: UNPAUSED}
+      tasks:
+        - task_key: load
+          spark_python_task:
+            python_file: jobs/external_factors.py
+            parameters: ["${var.catalog}", "${var.prefix}", "/Volumes/${var.catalog}/${var.prefix}vdr/deal_rooms/_staging_tables/external_factors_seed.csv"]
+          environment_key: default
+      environments:
+        - environment_key: default
+          spec: {client: "2"}
+
+    hl_reset_data:
+      name: hl-reset-data
+      permissions:
+        - {service_principal_name: "${var.app_sp}", level: CAN_MANAGE_RUN}
+      tasks:
+        - task_key: volumes
+          spark_python_task:
+            python_file: jobs/reset_data.py
+            parameters: ["${var.catalog}", "${var.prefix}"]
+          environment_key: default
+        - task_key: tables
+          depends_on: [{task_key: volumes}]
+          sql_task: {warehouse_id: "${var.warehouse_id}", file: {path: build/sql/95_reset.sql}}
+        - task_key: reingest
+          depends_on: [{task_key: tables}]
+          run_job_task: {job_id: "${resources.jobs.hl_dealroom_ingest.id}"}
+      environments:
+        - environment_key: default
+          spec: {client: "2"}
+
+
+targets:
+  dev:
+    default: true
+    mode: development

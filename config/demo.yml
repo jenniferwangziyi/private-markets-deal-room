@@ -1,0 +1,19 @@
+profile: hunter
+warehouse_id: d451ee34130421c9
+catalog: harbourline
+schema_prefix: ""
+app_sp: "b55e85ff-6c35-4f89-812a-80106438c2b6"   # service principal of the harbourline-dealroom app
+roles:                    # account groups used as switchable roles (RBAC "switch role")
+  role-business-user: "156788558191447"
+  role-approver: "152588734817752"
+  role-it-ai-owner: "154262687105990"
+  role-external-gp: "150129972751777"
+sharepoint:               # optional source: a SharePoint document library read through a UC connection
+  url: "https://databricksinc.sharepoint.com/sites/FEGDemo/Harbourline_DealRoom"
+  connection: feg-demo
+ai:
+  llm_model: databricks-gpt-oss-120b               # open-weight Foundation Model API endpoint used by agents + ai_query
+  eval_threshold: 0.8
+  widget_endpoint: hl-widget-builder
+lakebase:
+  project: harbourline

@@ -1,0 +1,27 @@
+{
+  "name": "synced_tables/harbourline_serving.serving.external_factors",
+  "spec": {
+    "branch": "projects/harbourline/branches/production",
+    "create_database_objects_if_missing": true,
+    "new_pipeline_spec": {
+      "storage_catalog": "harbourline",
+      "storage_schema": "governance"
+    },
+    "postgres_database": "databricks_postgres",
+    "primary_key_columns": [
+      "series"
+    ],
+    "scheduling_policy": "TRIGGERED",
+    "source_table_full_name": "harbourline.vdr.external_factors"
+  },
+  "status": {
+    "detailed_state": "SYNCED_TABLE_PROVISIONING_PIPELINE_RESOURCES",
+    "message": "Synced table is currently pending setup of pipeline resources. Check latest status in Delta Live Tables: https://adb-3311028655009738.18.azuredatabricks.net#joblist/pipelines/0fee06e7-98e0-467d-8b9b-6781c86c85b6/updates/c8983509-7b48-4f64-a79a-74ba8fb88c7e",
+    "ongoing_sync_progress": {},
+    "pipeline_id": "0fee06e7-98e0-467d-8b9b-6781c86c85b6",
+    "project": "projects/harbourline",
+    "unity_catalog_provisioning_state": "ACTIVE"
+  },
+  "synced_table_id": "harbourline_serving.serving.external_factors",
+  "uid": "1c387c43-00e6-444d-9a3d-af9eece88048"
+}

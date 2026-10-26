@@ -1,0 +1,137 @@
+### sql/00_catalog.sql
+[SUCCEEDED] CREATE CATALOG IF NOT EXISTS harbourline
+[SUCCEEDED] CREATE SCHEMA IF NOT EXISTS harbourline.vdr
+[SUCCEEDED] CREATE SCHEMA IF NOT EXISTS harbourline.semantic
+[SUCCEEDED] CREATE SCHEMA IF NOT EXISTS harbourline.governance
+[SUCCEEDED] CREATE VOLUME IF NOT EXISTS harbourline.vdr.deal_rooms COMMENT 'Deal-room landing zone (Phase A/B/C 
+[SUCCEEDED] CREATE VOLUME IF NOT EXISTS harbourline.vdr.portal_uploads COMMENT 'External-party portal uploads'
+### sql/10_tables.sql
+[SUCCEEDED] CREATE TABLE IF NOT EXISTS harbourline.vdr.file_register (file_id STRING, portfolio STRING, deal_roo
+[SUCCEEDED] CREATE TABLE IF NOT EXISTS harbourline.vdr.file_content (file_id STRING, portfolio STRING, path STRI
+[SUCCEEDED] CREATE TABLE IF NOT EXISTS harbourline.vdr.doc_parsed (file_id STRING, portfolio STRING, path STRING
+[SUCCEEDED] CREATE TABLE IF NOT EXISTS harbourline.vdr.doc_extracts (file_id STRING, portfolio STRING, deal_room
+[SUCCEEDED] CREATE TABLE IF NOT EXISTS harbourline.vdr.checklist_items (investment STRING, portfolio STRING, sta
+[SUCCEEDED] CREATE TABLE IF NOT EXISTS harbourline.vdr.investments (name STRING, sector STRING, revenue_growth_p
+[SUCCEEDED] CREATE TABLE IF NOT EXISTS harbourline.vdr.portfolio_kpis (period STRING, kpi STRING, value DOUBLE, 
+[SUCCEEDED] CREATE TABLE IF NOT EXISTS harbourline.vdr.performance_summary (metric STRING, actual_ltm_pct DOUBLE
+[SUCCEEDED] CREATE TABLE IF NOT EXISTS harbourline.vdr.value_bridge (step STRING, usd_m DOUBLE, step_order INT, 
+[SUCCEEDED] CREATE TABLE IF NOT EXISTS harbourline.vdr.income_statement (line STRING, actual_usd_m DOUBLE, plan_
+[SUCCEEDED] CREATE TABLE IF NOT EXISTS harbourline.vdr.reporting_calendar (investment STRING, report STRING, due
+[SUCCEEDED] CREATE TABLE IF NOT EXISTS harbourline.vdr.risks (investment STRING, inherent STRING, current STRING
+[SUCCEEDED] CREATE TABLE IF NOT EXISTS harbourline.vdr.alerts (alert STRING, count INT, detail STRING, portfolio
+[SUCCEEDED] CREATE TABLE IF NOT EXISTS harbourline.vdr.external_factors (series STRING, label STRING, value DOUB
+[SUCCEEDED] CREATE TABLE IF NOT EXISTS harbourline.governance.role_scope (principal STRING, scope_type STRING, s
+[SUCCEEDED] CREATE TABLE IF NOT EXISTS harbourline.governance.model_register (model STRING, provider STRING, ver
+### sql/30_load.sql
+[SUCCEEDED] INSERT OVERWRITE harbourline.vdr.investments SELECT name, sector, CAST(revenue_growth_pct AS DOUBLE)
+    ['7', '7']
+[SUCCEEDED] INSERT OVERWRITE harbourline.vdr.portfolio_kpis SELECT period, kpi, CAST(value AS DOUBLE), 'Fund I'
+    ['12', '12']
+[SUCCEEDED] INSERT INTO harbourline.vdr.portfolio_kpis SELECT '2026-Q1', kpi,
+    ['12', '12']
+[SUCCEEDED] INSERT OVERWRITE harbourline.vdr.performance_summary SELECT metric, CAST(actual_ltm_pct AS DOUBLE), 
+    ['5', '5']
+[SUCCEEDED] INSERT OVERWRITE harbourline.vdr.value_bridge SELECT step, CAST(usd_m AS DOUBLE), CAST(monotonically
+    ['5', '5']
+[SUCCEEDED] INSERT OVERWRITE harbourline.vdr.income_statement SELECT line, CAST(actual_usd_m AS DOUBLE), CAST(pl
+    ['3', '3']
+[SUCCEEDED] INSERT OVERWRITE harbourline.vdr.reporting_calendar SELECT investment, report, CAST(due_date AS DATE
+    ['28', '28']
+[SUCCEEDED] INSERT OVERWRITE harbourline.vdr.risks SELECT investment, inherent, current, trend, driver, portfoli
+    ['5', '5']
+[SUCCEEDED] INSERT OVERWRITE harbourline.vdr.alerts SELECT alert, CAST(count AS INT), detail, portfolio
+    ['5', '5']
+[SUCCEEDED] INSERT OVERWRITE harbourline.vdr.checklist_items SELECT investment, 'Fund I', CAST(stage AS INT), it
+    ['25', '25']
+[SUCCEEDED] INSERT OVERWRITE harbourline.governance.role_scope SELECT principal, scope_type, scope_value
+    ['4', '4']
+[SUCCEEDED] INSERT INTO harbourline.governance.role_scope VALUES (current_user(), 'portfolio', '*'),
+    ['2', '2']
+[SUCCEEDED] INSERT OVERWRITE harbourline.governance.model_register VALUES
+    ['4', '4']
+### sql/32_deal_status.sql
+[SUCCEEDED] CREATE TABLE IF NOT EXISTS harbourline.vdr.checklist_status (investment STRING, portfolio STRING, st
+[SUCCEEDED] ALTER TABLE harbourline.vdr.checklist_status ALTER COLUMN portfolio UNSET TAGS ('portfolio')
+[SUCCEEDED] ALTER TABLE harbourline.vdr.checklist_status ALTER COLUMN portfolio SET TAGS ('hl_portfolio')
+[SUCCEEDED] CREATE OR REPLACE VIEW harbourline.vdr.deal_status COMMENT 'Completion %, gaps per deal-room stage (
+[SUCCEEDED] CREATE OR REPLACE VIEW harbourline.vdr.risk_alerts COMMENT 'Deal-room risk alerts: expired documents
+### sql/20_governance.sql
+[SUCCEEDED] CREATE OR REPLACE FUNCTION harbourline.governance.scope_match(p_type STRING, p_val STRING) RETURNS B
+[SUCCEEDED] CREATE OR REPLACE FUNCTION harbourline.governance.file_visible(portfolio STRING, deal_room STRING, c
+[SUCCEEDED] ALTER TABLE harbourline.vdr.file_register SET TAGS ('hl_classification' = 'Confidential')
+[SUCCEEDED] ALTER TABLE harbourline.vdr.doc_extracts SET TAGS ('hl_classification' = 'Confidential')
+[SUCCEEDED] ALTER TABLE harbourline.vdr.investments SET TAGS ('hl_classification' = 'Confidential')
+[SUCCEEDED] ALTER TABLE harbourline.vdr.investments ALTER COLUMN portfolio SET TAGS ('hl_portfolio')
+[SUCCEEDED] ALTER TABLE harbourline.vdr.portfolio_kpis ALTER COLUMN portfolio SET TAGS ('hl_portfolio')
+[SUCCEEDED] ALTER TABLE harbourline.vdr.performance_summary ALTER COLUMN portfolio SET TAGS ('hl_portfolio')
+[SUCCEEDED] ALTER TABLE harbourline.vdr.value_bridge ALTER COLUMN portfolio SET TAGS ('hl_portfolio')
+[SUCCEEDED] ALTER TABLE harbourline.vdr.income_statement ALTER COLUMN portfolio SET TAGS ('hl_portfolio')
+[SUCCEEDED] ALTER TABLE harbourline.vdr.reporting_calendar ALTER COLUMN portfolio SET TAGS ('hl_portfolio')
+[SUCCEEDED] ALTER TABLE harbourline.vdr.risks ALTER COLUMN portfolio SET TAGS ('hl_portfolio')
+[SUCCEEDED] ALTER TABLE harbourline.vdr.alerts ALTER COLUMN portfolio SET TAGS ('hl_portfolio')
+[SUCCEEDED] ALTER TABLE harbourline.vdr.checklist_items ALTER COLUMN portfolio SET TAGS ('hl_portfolio')
+[SUCCEEDED] ALTER TABLE harbourline.vdr.file_content ALTER COLUMN portfolio SET TAGS ('hl_portfolio')
+[SUCCEEDED] ALTER TABLE harbourline.vdr.doc_extracts ALTER COLUMN portfolio SET TAGS ('hl_portfolio')
+[SUCCEEDED] ALTER TABLE harbourline.vdr.doc_parsed ALTER COLUMN portfolio SET TAGS ('hl_portfolio')
+[SUCCEEDED] ALTER TABLE harbourline.vdr.doc_parsed SET TAGS ('hl_classification' = 'Confidential')
+[SUCCEEDED] ALTER TABLE harbourline.vdr.file_content SET TAGS ('hl_classification' = 'Confidential')
+[SUCCEEDED] CREATE OR REPLACE FUNCTION harbourline.governance.scope_match_portfolio(p STRING) RETURNS BOOLEAN
+[FAILED] CREATE OR REPLACE POLICY portfolio_rows ON SCHEMA harbourline.vdr
+{
+  "state": "FAILED",
+  "error": {
+    "error_code": "BAD_REQUEST",
+    "message": "[RequestId=8e8053b1-91f3-4e0e-b968-0fef1f9ff1dc ErrorClass=INVALID_PARAMETER_VALUE.UC_INVALID_POLICY_CONDITION] Invalid condition in policy 'portfolio_rows'. Compilation error with message 'Unknown tag policy key `hl_portfolio`'."
+  },
+  "sql_state": "42611"
+}
+### sql/40_metric_views.sql
+[SUCCEEDED] CREATE OR REPLACE VIEW harbourline.semantic.stage3_kpis WITH METRICS LANGUAGE YAML AS $$
+[SUCCEEDED] CREATE OR REPLACE VIEW harbourline.semantic.deal_room_completion WITH METRICS LANGUAGE YAML AS $$
+[SUCCEEDED] CREATE TABLE IF NOT EXISTS harbourline.semantic.business_glossary (term STRING, definition STRING, s
+[SUCCEEDED] INSERT OVERWRITE harbourline.semantic.business_glossary VALUES
+    ['5', '5']
+[SUCCEEDED] COMMENT ON TABLE harbourline.vdr.file_register IS 'Every deal-room file with portfolio, room, path, 
+### sql/50_ai.sql
+[SUCCEEDED] CREATE SCHEMA IF NOT EXISTS harbourline.ai COMMENT 'AI assets: agent models, prompts, model services
+[SUCCEEDED] GRANT USE SCHEMA ON SCHEMA harbourline.ai TO `role-business-user`
+[SUCCEEDED] GRANT USE SCHEMA ON SCHEMA harbourline.ai TO `role-approver`
+[SUCCEEDED] GRANT USE SCHEMA ON SCHEMA harbourline.ai TO `role-it-ai-owner`
+[SUCCEEDED] GRANT EXECUTE ON SCHEMA harbourline.ai TO `role-it-ai-owner`
+[SUCCEEDED] INSERT OVERWRITE harbourline.governance.model_register VALUES
+    ['4', '4']
+[SUCCEEDED] GRANT SELECT ON TABLE harbourline.governance.model_register TO `role-it-ai-owner`
+[SUCCEEDED] GRANT SELECT ON TABLE harbourline.governance.model_register TO `role-approver`
+### sql/60_app_grants.sql
+[SUCCEEDED] GRANT USE CATALOG ON CATALOG harbourline TO `b55e85ff-6c35-4f89-812a-80106438c2b6`
+[SUCCEEDED] GRANT USE SCHEMA, SELECT ON SCHEMA harbourline.vdr TO `b55e85ff-6c35-4f89-812a-80106438c2b6`
+[SUCCEEDED] GRANT USE SCHEMA, EXECUTE ON SCHEMA harbourline.governance TO `b55e85ff-6c35-4f89-812a-80106438c2b6`
+[SUCCEEDED] GRANT USE SCHEMA, EXECUTE ON SCHEMA harbourline.ai TO `b55e85ff-6c35-4f89-812a-80106438c2b6`
+[SUCCEEDED] GRANT MODIFY ON TABLE harbourline.vdr.checklist_status TO `b55e85ff-6c35-4f89-812a-80106438c2b6`
+[SUCCEEDED] GRANT MODIFY ON TABLE harbourline.vdr.doc_extracts TO `b55e85ff-6c35-4f89-812a-80106438c2b6`
+[SUCCEEDED] GRANT MODIFY ON TABLE harbourline.vdr.file_register TO `b55e85ff-6c35-4f89-812a-80106438c2b6`
+[FAILED] GRANT SELECT, MODIFY ON TABLE harbourline.governance.token_budgets TO `b55e85ff-6c35-4f89-812a-80106
+{
+  "state": "FAILED",
+  "error": {
+    "error_code": "BAD_REQUEST",
+    "message": "[RequestId=d2582053-8ad5-453e-bd1a-4f76b7b18760 ErrorClass=TABLE_DOES_NOT_EXIST.RESOURCE_DOES_NOT_EXIST] Table 'harbourline.governance.token_budgets' does not exist."
+  },
+  "sql_state": "42704"
+}
+[SUCCEEDED] CREATE TABLE IF NOT EXISTS harbourline.vdr.checklist_status (investment STRING, portfolio STRING, st
+[SUCCEEDED] ALTER TABLE harbourline.vdr.checklist_status ALTER COLUMN portfolio UNSET TAGS ('portfolio')
+[SUCCEEDED] ALTER TABLE harbourline.vdr.checklist_status ALTER COLUMN portfolio SET TAGS ('domain_portfolio_mana
+[SUCCEEDED] CREATE OR REPLACE VIEW harbourline.vdr.deal_status COMMENT 'Completion %, gaps per deal-room stage (
+[SUCCEEDED] CREATE OR REPLACE VIEW harbourline.vdr.risk_alerts COMMENT 'Deal-room risk alerts: expired documents
+[SUCCEEDED] GRANT USE CATALOG ON CATALOG harbourline TO `b55e85ff-6c35-4f89-812a-80106438c2b6`
+[SUCCEEDED] GRANT USE SCHEMA, SELECT ON SCHEMA harbourline.vdr TO `b55e85ff-6c35-4f89-812a-80106438c2b6`
+[SUCCEEDED] GRANT USE SCHEMA, EXECUTE ON SCHEMA harbourline.governance TO `b55e85ff-6c35-4f89-812a-80106438c2b6`
+[SUCCEEDED] GRANT USE SCHEMA, EXECUTE ON SCHEMA harbourline.ai TO `b55e85ff-6c35-4f89-812a-80106438c2b6`
+[SUCCEEDED] GRANT MODIFY ON TABLE harbourline.vdr.checklist_status TO `b55e85ff-6c35-4f89-812a-80106438c2b6`
+[SUCCEEDED] GRANT MODIFY ON TABLE harbourline.vdr.doc_extracts TO `b55e85ff-6c35-4f89-812a-80106438c2b6`
+[SUCCEEDED] GRANT MODIFY ON TABLE harbourline.vdr.file_register TO `b55e85ff-6c35-4f89-812a-80106438c2b6`
+[SUCCEEDED] GRANT READ VOLUME, WRITE VOLUME ON VOLUME harbourline.vdr.deal_rooms TO `b55e85ff-6c35-4f89-812a-801
+[SUCCEEDED] GRANT READ VOLUME ON VOLUME harbourline.vdr.portal_uploads TO `b55e85ff-6c35-4f89-812a-80106438c2b6`
+[SUCCEEDED] INSERT INTO harbourline.governance.role_scope VALUES ('b55e85ff-6c35-4f89-812a-80106438c2b6', 'portf
+    ['2', '2']

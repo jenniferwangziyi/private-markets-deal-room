@@ -1,0 +1,7 @@
+series,label,value,unit,observed_at,source,tag,prev_value
+HKMA_BASE_RATE,HKMA Base Rate,4.25,pct,2026-10-10,https://www.hkma.gov.hk,portfolio:Fund I,4.50
+HIBOR_3M,3M HIBOR,3.85,pct,2026-10-10,https://www.hkab.org.hk,portfolio:Fund I,3.92
+PBOC_LPR_1Y,PBOC 1Y LPR,3.00,pct,2026-09-22,http://www.pbc.gov.cn,sector:Energy,3.10
+ECB_DEPOSIT,ECB deposit rate,2.00,pct,2026-09-11,https://www.ecb.europa.eu,portfolio:Fund I,2.00
+BOE_BANK_RATE,BoE Bank Rate,3.75,pct,2026-09-18,https://www.bankofengland.co.uk,portfolio:Fund I,4.00
+HSI,Hang Seng Index,26150,index,2026-10-10,https://www.hsi.com.hk,portfolio:Fund I,25890

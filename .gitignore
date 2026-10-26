@@ -1,0 +1,11 @@
+.superpowers/
+__pycache__/
+*.pyc
+.DS_Store
+.venv/
+build/
+dist/
+mlflow.db
+deck/*.html
+.databricks/
+uv.lock

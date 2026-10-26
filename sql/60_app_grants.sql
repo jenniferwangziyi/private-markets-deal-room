@@ -1,0 +1,10 @@
+GRANT USE CATALOG ON CATALOG ${catalog} TO `${app_sp}`;
+GRANT USE SCHEMA, SELECT ON SCHEMA ${vdr} TO `${app_sp}`;
+GRANT USE SCHEMA, EXECUTE ON SCHEMA ${governance} TO `${app_sp}`;
+GRANT USE SCHEMA, EXECUTE ON SCHEMA ${ai} TO `${app_sp}`;
+GRANT MODIFY ON TABLE ${vdr}.checklist_status TO `${app_sp}`;
+GRANT MODIFY ON TABLE ${vdr}.doc_extracts TO `${app_sp}`;
+GRANT MODIFY ON TABLE ${vdr}.file_register TO `${app_sp}`;
+GRANT READ VOLUME, WRITE VOLUME ON VOLUME ${vdr}.deal_rooms TO `${app_sp}`;
+GRANT READ VOLUME ON VOLUME ${vdr}.portal_uploads TO `${app_sp}`;
+INSERT INTO ${governance}.role_scope VALUES ('${app_sp}', 'portfolio', '*'), ('${app_sp}', 'deal_room', '*');

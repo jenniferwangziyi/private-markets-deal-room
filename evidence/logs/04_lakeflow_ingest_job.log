@@ -1,0 +1,14 @@
+Run URL: https://adb-3311028655009738.18.azuredatabricks.net/jobs/267026758985098/runs/331364740209467?o=3311028655009738
+
+2026-10-26 14:19:43 "[dev jennifer_wang] hl-dealroom-ingest" RUNNING
+2026-10-26 14:23:26 "[dev jennifer_wang] hl-dealroom-ingest" TERMINATED SUCCESS
+Output:
+=======
+Task ingest:
+/databricks/python/lib/python3.12/site-packages/pyspark/sql/connect/udf.py:103: UserWarning: Cannot infer the eval type from type hints. 
+  warnings.warn("Cannot infer the eval type from type hints. ", UserWarning)
+
+=======
+Task ai_extract:
+SQL Task Output:
+{}

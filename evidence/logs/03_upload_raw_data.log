@@ -1,0 +1,2 @@
+data/seed/external_factors_seed.csv -> dbfs:/Volumes/harbourline/vdr/deal_rooms/_staging_tables/external_factors_seed.csv
+uploaded raw data to dbfs:/Volumes/harbourline/vdr

@@ -1,0 +1,41 @@
+[SUCCEEDED] CREATE OR REPLACE FUNCTION harbourline.governance.scope_match(p_type STRING, p_val STRING) RETURNS B
+[SUCCEEDED] CREATE OR REPLACE FUNCTION harbourline.governance.file_visible(portfolio STRING, deal_room STRING, c
+[SUCCEEDED] ALTER TABLE harbourline.vdr.file_register SET TAGS ('data_classification' = 'confidential')
+[SUCCEEDED] ALTER TABLE harbourline.vdr.doc_extracts SET TAGS ('data_classification' = 'confidential')
+[SUCCEEDED] ALTER TABLE harbourline.vdr.investments SET TAGS ('data_classification' = 'confidential')
+[SUCCEEDED] ALTER TABLE harbourline.vdr.investments ALTER COLUMN portfolio SET TAGS ('domain_portfolio_managemen
+[SUCCEEDED] ALTER TABLE harbourline.vdr.portfolio_kpis ALTER COLUMN portfolio SET TAGS ('domain_portfolio_manage
+[SUCCEEDED] ALTER TABLE harbourline.vdr.performance_summary ALTER COLUMN portfolio SET TAGS ('domain_portfolio_m
+[SUCCEEDED] ALTER TABLE harbourline.vdr.value_bridge ALTER COLUMN portfolio SET TAGS ('domain_portfolio_manageme
+[SUCCEEDED] ALTER TABLE harbourline.vdr.income_statement ALTER COLUMN portfolio SET TAGS ('domain_portfolio_mana
+[SUCCEEDED] ALTER TABLE harbourline.vdr.reporting_calendar ALTER COLUMN portfolio SET TAGS ('domain_portfolio_ma
+[SUCCEEDED] ALTER TABLE harbourline.vdr.risks ALTER COLUMN portfolio SET TAGS ('domain_portfolio_management')
+[SUCCEEDED] ALTER TABLE harbourline.vdr.alerts ALTER COLUMN portfolio SET TAGS ('domain_portfolio_management')
+[SUCCEEDED] ALTER TABLE harbourline.vdr.checklist_items ALTER COLUMN portfolio SET TAGS ('domain_portfolio_manag
+[SUCCEEDED] ALTER TABLE harbourline.vdr.file_content ALTER COLUMN portfolio SET TAGS ('domain_portfolio_manageme
+[SUCCEEDED] ALTER TABLE harbourline.vdr.doc_extracts ALTER COLUMN portfolio SET TAGS ('domain_portfolio_manageme
+[SUCCEEDED] ALTER TABLE harbourline.vdr.doc_parsed ALTER COLUMN portfolio SET TAGS ('domain_portfolio_management
+[SUCCEEDED] ALTER TABLE harbourline.vdr.doc_parsed SET TAGS ('data_classification' = 'confidential')
+[SUCCEEDED] ALTER TABLE harbourline.vdr.file_content SET TAGS ('data_classification' = 'confidential')
+[SUCCEEDED] CREATE OR REPLACE FUNCTION harbourline.governance.scope_match_portfolio(p STRING) RETURNS BOOLEAN
+[SUCCEEDED] CREATE OR REPLACE POLICY portfolio_rows ON SCHEMA harbourline.vdr
+[SUCCEEDED] ALTER TABLE harbourline.vdr.file_register SET ROW FILTER harbourline.governance.file_visible ON (por
+[SUCCEEDED] GRANT USE CATALOG ON CATALOG harbourline TO `role-business-user`
+[SUCCEEDED] GRANT USE CATALOG ON CATALOG harbourline TO `role-approver`
+[SUCCEEDED] GRANT USE CATALOG ON CATALOG harbourline TO `role-it-ai-owner`
+[SUCCEEDED] GRANT USE CATALOG ON CATALOG harbourline TO `role-external-gp`
+[SUCCEEDED] GRANT USE SCHEMA, SELECT ON SCHEMA harbourline.vdr TO `role-business-user`
+[SUCCEEDED] GRANT USE SCHEMA, SELECT ON SCHEMA harbourline.vdr TO `role-approver`
+[SUCCEEDED] GRANT USE SCHEMA, SELECT ON SCHEMA harbourline.vdr TO `role-it-ai-owner`
+[SUCCEEDED] GRANT USE SCHEMA, SELECT ON SCHEMA harbourline.vdr TO `role-external-gp`
+[SUCCEEDED] GRANT USE SCHEMA, SELECT ON SCHEMA harbourline.semantic TO `role-business-user`
+[SUCCEEDED] GRANT USE SCHEMA, SELECT ON SCHEMA harbourline.semantic TO `role-approver`
+[SUCCEEDED] GRANT USE SCHEMA, SELECT ON SCHEMA harbourline.semantic TO `role-it-ai-owner`
+[SUCCEEDED] GRANT USE SCHEMA, EXECUTE ON SCHEMA harbourline.governance TO `role-business-user`
+[SUCCEEDED] GRANT USE SCHEMA, EXECUTE ON SCHEMA harbourline.governance TO `role-approver`
+[SUCCEEDED] GRANT USE SCHEMA, EXECUTE ON SCHEMA harbourline.governance TO `role-it-ai-owner`
+[SUCCEEDED] GRANT USE SCHEMA, EXECUTE ON SCHEMA harbourline.governance TO `role-external-gp`
+[SUCCEEDED] GRANT READ VOLUME ON VOLUME harbourline.vdr.deal_rooms TO `role-business-user`
+[SUCCEEDED] GRANT READ VOLUME ON VOLUME harbourline.vdr.deal_rooms TO `role-approver`
+[SUCCEEDED] GRANT READ VOLUME, WRITE VOLUME ON VOLUME harbourline.vdr.portal_uploads TO `role-external-gp`
+[SUCCEEDED] GRANT READ VOLUME, WRITE VOLUME ON VOLUME harbourline.vdr.portal_uploads TO `role-business-user`

@@ -1,0 +1,18 @@
+{
+  "workspace_id": "3311028655009738",
+  "llm_model": "databricks-gpt-oss-120b",
+  "dashboards": {
+    "stage3": "01f1d10649bc1be981895a2ddda116cb",
+    "executive": "01f1d1064f6d1acfaf77abc70704307d"
+  },
+  "genie": {
+    "vdr": "01f1d10659f415f9b65b90772564d846"
+  },
+  "roles": {
+    "role-business-user": "156788558191447",
+    "role-approver": "152588734817752",
+    "role-it-ai-owner": "154262687105990",
+    "role-external-gp": "150129972751777"
+  },
+  "lakebase_serving_schema": "serving"
+}
